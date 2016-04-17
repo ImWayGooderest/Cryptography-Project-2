@@ -33,8 +33,9 @@ int main(int argc, char** argv)
 	cipher->setKey((unsigned char*)"0123456789abcdef");
 	
 	/* Perform encryption */
-	//string cipherText = cipher->encrypt("hello world");
+	const unsigned char* cipherText = cipher->encrypt((unsigned char*)"abcdefgh");
 	
+	const unsigned char* plainText = cipher->decrypt(cipherText);
 	/* Perform decryption */
 	//cipher->decrypt(cipherText);	
 	

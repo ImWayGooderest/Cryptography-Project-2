@@ -67,6 +67,28 @@ bool DES::setKey(const unsigned char* keyArray)
  */
 unsigned char* DES::encrypt(const unsigned char* plaintext)
 {
+	unsigned char* bytes = new unsigned char[8];
+	unsigned char ciphertext[9];
+	DES_LONG block[2];
+	if (strlen((const char*)plaintext) == 8)
+	{
+		printf("Size of char : %d\n", strlen((const char*)plaintext));
+		block[0] = ctol((unsigned char*)plaintext);
+		block[1] = ctol((unsigned char*)plaintext + 4);
+		des_encrypt1(block, this->key, 1);//1 means encrypt 0 is decrypt
+		memset(ciphertext, 0, 9);//this was in the sample code not sure if needed
+		ltoc(block[0], ciphertext);
+		ltoc(block[1], ciphertext + 4);
+		fprintf(stderr, "Cipher text: %s\n", ciphertext);//print statements here for now
+		bytes = ciphertext;
+		return bytes;//not sure if Im returning the correct thing
+	}
+	else
+	{
+		return NULL;//put this here for now, probably should throw error
+	}
+
+	
 	//LOGIC:
 	//1. Check to make sure that the block is exactly 8 characters (i.e. 64 bits)
 	//2. Declate an array DES_LONG block[2];
@@ -76,10 +98,9 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
 	//6. Convert the first ciphertext long to 4 characters using ltoc()
 	//7. Convert the second ciphertext long to 4 characters using ltoc()
 	//8. Save the results in the the dynamically allocated char array 
-	// (e.g. unsigned char* bytes = nerw unsigned char[8]).
+	// (e.g. unsigned char* bytes = new unsigned char[8]).
 	//9. Return the pointer to the dynamically allocated array.
-	
-	return NULL;
+
 }
 
 /**
@@ -89,6 +110,25 @@ unsigned char* DES::encrypt(const unsigned char* plaintext)
  */
 unsigned char* DES::decrypt(const unsigned char* ciphertext)
 {
+	unsigned char* bytes = new unsigned char[8];
+	unsigned char* plaintext;
+	DES_LONG block[2];
+	if (strlen((const char*)ciphertext) == 8)
+	{
+		block[0] = ctol((unsigned char*)ciphertext);
+		block[1] = ctol((unsigned char*)ciphertext + 4);
+		des_encrypt1(block, this->key, 0);//1 means encrypt 0 is decrypt
+		memset(plaintext, 0, 9);
+		ltoc(block[0], plaintext);
+		ltoc(block[1], plaintext + 4);
+		fprintf(stderr, "plain text: %s\n", plaintext);
+		bytes = plaintext;
+		return bytes;
+	}
+	else 
+	{
+		return NULL;//put this here for now, probably should throw error
+	}
 	//LOGIC:
 	// Same logic as encrypt(), except in step 5. decrypt instead of encrypting
 }
